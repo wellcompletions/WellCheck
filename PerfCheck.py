@@ -6,16 +6,18 @@ if __name__ == "__main__":
 
     with open(newfilename, 'w') as f:
           
-        workbookPerf = load_workbook(filename=sys.argv[1], data_only=True)
+        workbookPerf = load_workbook(filename=sys.argv[1], read_only=True, data_only=True)
         numstages = int(workbookPerf.sheetnames[1][0:2:])
         print('\n\nLoading Perforations ...\n')
-        print(sys.argv[1], file=f)
-        print(workbookPerf.sheetnames[1])
+        print('Perforations', file=f)
+        print('\n',sys.argv[1][2::],'\n',workbookPerf.sheetnames[1], file=f)
+        
         print(sys.argv[1][2::],'\n')
-        print('\n', workbookPerf.sheetnames[1],'\n',sys.argv[1][2::], file=f)
+        print(workbookPerf.sheetnames[1])
+        
         sheet = workbookPerf[workbookPerf.sheetnames[1]]
         perfDepth = []
-        for i,row in enumerate(sheet.iter_rows(min_row=8,
+        for i, row in enumerate(sheet.iter_rows(min_row=8,
                                     max_row=(numstages*2)+7,
                                     min_col=3,
                                     max_col=15,
@@ -34,7 +36,7 @@ if __name__ == "__main__":
         
         
         print('\nLoading Collars ...')
-        workbookCollars = load_workbook(filename=sys.argv[2], data_only=True)
+        workbookCollars = load_workbook(filename=sys.argv[2], read_only=True, data_only=True)
         print()
         print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n')
         print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n', file=f)
