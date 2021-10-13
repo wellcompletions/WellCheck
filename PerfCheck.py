@@ -96,7 +96,12 @@ if __name__ == "__main__":
                     print(collar, '    ', perf, ' is -2 below')
                     print(collar, '    ', perf, ' is -2 below',file=f) 
                     conflict.append(perf)
-        
+        if len(conflict) == 0:
+            print('\nNo conflicts detected.')
+            print('\nNo conflicts detected.', file = f)
+        else:
+            print('\n',len(conflict),'conflicts detected.')
+            print('\n',len(conflict),'conflicts detected.', file = f)
         sheetSetBack = workbookPerf[workbookPerf.sheetnames[0]]
 
         print('\nDeepest perf    Shallowest perf')    
