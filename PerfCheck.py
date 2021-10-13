@@ -2,69 +2,67 @@ from openpyxl import load_workbook
 import sys 
 
 if __name__ == "__main__":
+    #create a new file name for the error.txt file to be generated
     newfilename = sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt'
 
     with open(newfilename, 'w') as f:
           
         workbookPerf = load_workbook(filename=sys.argv[1], read_only=True, data_only=True)
+        # grab number of stages from the sheet tab 
         numstages = int(workbookPerf.sheetnames[1][0:2:])
+        # print the header for both the terminal and the file 
         print('\n\nLoading Perforations ...\n')
         print('Perforations', file=f)
         print('\n',sys.argv[1][2::],'\n',workbookPerf.sheetnames[1], file=f)
-        
         print(sys.argv[1][2::],'\n')
         print(workbookPerf.sheetnames[1])
-        
+        # pick the perf sheet with stages
         sheet = workbookPerf[workbookPerf.sheetnames[1]]
-        perfDepth = []
+        perfDepth = []  # list because it is mutable
         for i, row in enumerate(sheet.iter_rows(min_row=8,
                                     max_row=(numstages*2)+7,
                                     min_col=3,
                                     max_col=15,
                                     values_only=True)):
-            
+            # pick every other row (evens)
             if i % 2 == 0:
                 for cell in row:  
-                    if isinstance(cell, float):          
+                    if isinstance(cell, float) or isinstance(cell, int):          
                         perfDepth.append(round(cell))   
-                        print(round(cell), end = ' ')
-                        print(round(cell), end = ' ', file=f)
+                        print(repr(round(cell)).rjust(5), end = ' ')
+                        print(repr(round(cell)).rjust(5), end = ' ', file=f)
                 print()
                 print(file=f)
-
+        # grab deepest and shallowest perfs
         deepPerf = perfDepth[0]
         shallowPerf = perfDepth[len(perfDepth)-1]
         
         
         print('\nLoading Collars ...')
-        workbookCollars = load_workbook(filename=sys.argv[2], read_only=True, data_only=True)
         print()
+        workbookCollars = load_workbook(filename=sys.argv[2], read_only=True, data_only=True)
+        
         print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n')
         print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n', file=f)
-
+        # select the collars sheet
         sheetCollar = workbookCollars[workbookCollars.sheetnames[1]]
         collarDepth = []
-        k = 0
-
-        for row in sheetCollar.iter_rows(min_row=12,
+        
+        for k, row in enumerate(sheetCollar.iter_rows(min_row=12,
                                     max_row=400,
                                     min_col=21,
                                     max_col=21,
-                                    values_only=True):
-            
-            # print(row)
+                                    values_only=True)):
             for cell in row:
-                k = k +1
-                if isinstance(cell, float):
+                if isinstance(cell, float) or isinstance(cell, int):
                     collarDepth.append(round(cell))   
-                    print(round(cell), end=' ')
-                    print(round(cell), end=' ', file=f)
+                    print(repr(round(cell)).rjust(5), end=' ')
+                    print(repr(round(cell)).rjust(5), end=' ', file=f)
                     if k % 13 == 0:
                         print()
                         print(file=f)
-                
-        # print(tuple(collarDepth))
-
+        print('\n\n', k, 'Collars found.')   
+        print('\n\n', k, 'Collars found.', file = f)   
         print('\n\nList of conflicts: \n')
         print('Collar      Perf \n', end='')
         print('------     ------ \n', end='')
@@ -72,29 +70,29 @@ if __name__ == "__main__":
         print('Collar      Perf \n', end='',file=f)
         print('------     ------ \n', end='',file=f)
 
-        conflict = []
+        conflict = []  # create a conflict list for some project later
         for collar in tuple(collarDepth):
-            #print(collar)
+            
             for perf in tuple(perfDepth):
                 if int(collar) == int(perf):
-                    print(collar, '    ', perf, ' is same')
-                    print(collar, '    ', perf, ' is same',file=f)
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is the same')
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is the same',file = f)
                     conflict.append(perf)
                 elif int(collar)+1 == int(perf):
-                    print(collar, '    ', perf, ' is +1 above')
-                    print(collar, '    ', perf, ' is +1 above',file=f)
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is +1 above')
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is +1 above',file = f)
                     conflict.append(perf)
                 elif int(collar)+2 == int(perf):
-                    print(collar, '    ', perf, ' is +2 above')
-                    print(collar, '    ', perf, ' is +2 above',file=f)
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is +2 above')
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is +2 above',file = f)
                     conflict.append(perf)
                 elif int(collar)-1 == int(perf):
-                    print(collar, '    ', perf, ' is -1 below')
-                    print(collar, '    ', perf, ' is -1 below',file=f)
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is -1 below')
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is -1 below',file = f)
                     conflict.append(perf)
                 elif int(collar)-2 == int(perf):
-                    print(collar, '    ', perf, ' is -2 below')
-                    print(collar, '    ', perf, ' is -2 below',file=f) 
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is -2 below')
+                    print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is -2 below',file = f) 
                     conflict.append(perf)
         if len(conflict) == 0:
             print('\nNo conflicts detected.')
@@ -102,8 +100,9 @@ if __name__ == "__main__":
         else:
             print('\n',len(conflict),'conflicts detected.')
             print('\n',len(conflict),'conflicts detected.', file = f)
+        
+    # print deep / shallow and summary of good/bad
         sheetSetBack = workbookPerf[workbookPerf.sheetnames[0]]
-
         print('\nDeepest perf    Shallowest perf')    
         print('\nDeepest perf    Shallowest perf',file=f)          
         print(' ', deepPerf,'         ', shallowPerf) 
@@ -112,10 +111,7 @@ if __name__ == "__main__":
         print('\nToe Set-back    Heel set-back',file=f) 
         print(' ',round(sheetSetBack['AF22'].value), '         ', round(sheetSetBack['AF26'].value),'\n')  
         print(' ',round(sheetSetBack['AF22'].value), '         ', round(sheetSetBack['AF26'].value),'\n',file=f) 
-
-
-    # Future -  need error handling made for this next part 
-
+        # Future -  need error handling made for this next part 
         if int(deepPerf) < int(sheetSetBack['AF22'].value):
             print('Toe perf is within toe set-back line, perfs are good.')
             print('Toe perf is within toe set-back line, perfs are good.',file=f) 
@@ -129,5 +125,7 @@ if __name__ == "__main__":
             print('ERROR, Heel perf is shallower than heel set-back.')
             print('ERROR, Heel perf is shallower than heel set-back.',file=f)
         print('\n')
+        
+        
         # print(conflict)
 
