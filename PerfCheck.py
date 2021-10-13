@@ -24,10 +24,11 @@ if __name__ == "__main__":
                                     values_only=True)):
             
             if i % 2 == 0:
-                for cell in row:            
-                    perfDepth.append(round(cell))   
-                    print(round(cell), end = ' ')
-                    print(round(cell), end = ' ', file=f)
+                for cell in row:  
+                    if isinstance(cell, float):          
+                        perfDepth.append(round(cell))   
+                        print(round(cell), end = ' ')
+                        print(round(cell), end = ' ', file=f)
                 print()
                 print(file=f)
 
@@ -95,7 +96,7 @@ if __name__ == "__main__":
                     print(collar, '    ', perf, ' is -2 below')
                     print(collar, '    ', perf, ' is -2 below',file=f) 
                     conflict.append(perf)
-    
+        
         sheetSetBack = workbookPerf[workbookPerf.sheetnames[0]]
 
         print('\nDeepest perf    Shallowest perf')    
