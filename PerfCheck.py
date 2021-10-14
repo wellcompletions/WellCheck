@@ -2,10 +2,8 @@ from openpyxl import load_workbook
 import sys 
 
 if __name__ == "__main__":
-    #create a new file name for the error.txt file to be generated
-    newfilename = sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt'
-
-    with open(newfilename, 'w') as f:
+    
+    with open(sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt', 'w') as f:
           
         workbookPerf = load_workbook(filename=sys.argv[1], read_only=True, data_only=True)
         # grab number of stages from the sheet tab 
