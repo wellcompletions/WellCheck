@@ -46,26 +46,27 @@ if __name__ == "__main__":
         # select the collars sheet
         sheetCollar = workbookCollars[workbookCollars.sheetnames[1]]
         collarDepth = []
-        
+        collarCount = 0
         for k, row in enumerate(sheetCollar.iter_rows(min_row=12,
-                                    max_row=400,
+                                    max_row=500,
                                     min_col=21,
                                     max_col=21,
-                                    values_only=True)):
+                                    values_only=True), start=1):
             for cell in row:
                 if isinstance(cell, float) or isinstance(cell, int):
+                    collarCount +=1
                     collarDepth.append(round(cell))   
                     print(repr(round(cell)).rjust(5), end=' ')
                     print(repr(round(cell)).rjust(5), end=' ', file=f)
                     if k % 13 == 0:
                         print()
                         print(file=f)
-        print('\n\n', k, 'Collars found.')   
-        print('\n\n', k, 'Collars found.', file = f)   
-        print('\n\nList of conflicts: \n')
+        print('\n\n', collarCount, 'Collars found.')   
+        print('\n\n', collarCount, 'Collars found.', file = f)   
+        print('\nList of conflicts: \n')
         print('Collar      Perf \n', end='')
         print('------     ------ \n', end='')
-        print('\n\nList of conflicts: \n', file=f)
+        print('\nList of conflicts: \n', file=f)
         print('Collar      Perf \n', end='',file=f)
         print('------     ------ \n', end='',file=f)
 
@@ -94,18 +95,26 @@ if __name__ == "__main__":
                     print(repr(collar).rjust(5), '    ', repr(perf).rjust(5), ' is -2 below',file = f) 
                     conflict.append(perf)
         if len(conflict) == 0:
-            print('\nNo conflicts detected.')
-            print('\nNo conflicts detected.', file = f)
+            print()
+            print(file = f)
+            print('No conflicts detected.')
+            print('No conflicts detected.', file = f)
+            print()
+            print(file = f)
         else:
-            print('\n',len(conflict),'conflicts detected.')
-            print('\n',len(conflict),'conflicts detected.', file = f)
+            print()
+            print(file = f)
+            print(len(conflict),'conflicts detected.')
+            print(len(conflict),'conflicts detected.', file = f)
+            print()
+            print(file = f)
 
         workbookSurvey = load_workbook(filename=sys.argv[3], read_only=True, data_only=True)
         sheetSurvey = workbookSurvey[workbookSurvey.sheetnames[0]]
         surveyKB = 0
         surveyHeel = 0 
         surveyToe = 0
-        
+        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB from header found')
         for i, row in enumerate(sheetSurvey.iter_rows(min_row=24,
                                     max_row=300,
                                     min_col=0,
@@ -114,13 +123,16 @@ if __name__ == "__main__":
             for cell in row:
                 if repr(cell)[1:3] == "KB":
                     surveyKB = int(round(row[1]))
-                    print(round(row[1]))
+                    print(round(row[1]), 'ft KB from data found')
+                    print(round(row[1]), 'ft KB from data found', file = f)
                 elif repr(cell)[1:19] == "Cross Setback Heel":
-                    surveyHeel = round(row[1])     
-                    print(surveyHeel)        
+                    surveyHeel = round(row[1])   
+                    print(surveyHeel, 'Cross Setback Heel found') 
+                    print(surveyHeel, 'Cross Setback Heel found', file = f)
                 elif repr(cell)[1:18] == "Cross Setback Toe":
                     surveyToe = round(row[1])
-                    print(surveyToe)
+                    print(surveyToe, 'Cross Setback Toe found')
+                    print(surveyToe, 'Cross Setback Toe found', file = f)
                 
                 # print(repr(cell)[1:16])
         
@@ -128,7 +140,7 @@ if __name__ == "__main__":
                 
     # print deep / shallow and summary of good/bad
         sheetSetBack = workbookPerf[workbookPerf.sheetnames[0]]
-        surveyKB = 21
+        surveyKB = int((sheetSurvey.cell(8,9).value[3:5]))
         surveyHeelGL = surveyHeel - surveyKB
         surveyToeGL = surveyToe - surveyKB
         
