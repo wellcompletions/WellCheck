@@ -109,12 +109,18 @@ if __name__ == "__main__":
             print()
             print(file = f)
 
+        print('Loading Survey ...')
+        print()
+        print('Survey', file = f)
+        print(file = f)
+        print(sys.argv[3][2::].strip())
+        print('\n',sys.argv[2][2::].strip(), file = f)
         workbookSurvey = load_workbook(filename=sys.argv[3], read_only=True, data_only=True)
         sheetSurvey = workbookSurvey[workbookSurvey.sheetnames[0]]
         surveyKB = 0
         surveyHeel = 0 
         surveyToe = 0
-        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB from header found')
+        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB depth from header found')
         for i, row in enumerate(sheetSurvey.iter_rows(min_row=24,
                                     max_row=300,
                                     min_col=0,
@@ -123,16 +129,16 @@ if __name__ == "__main__":
             for cell in row:
                 if repr(cell)[1:3] == "KB":
                     surveyKB = int(round(row[1]))
-                    print(round(row[1]), 'ft KB from data found')
-                    print(round(row[1]), 'ft KB from data found', file = f)
+                    print(round(row[1]), 'ft KB depth from data found')
+                    print(round(row[1]), 'ft KB depth from data found', file = f)
                 elif repr(cell)[1:19] == "Cross Setback Heel":
                     surveyHeel = round(row[1])   
-                    print(surveyHeel, 'Cross Setback Heel found') 
-                    print(surveyHeel, 'Cross Setback Heel found', file = f)
+                    print(surveyHeel, 'Cross Setback Heel depth found') 
+                    print(surveyHeel, 'Cross Setback Heel depth found', file = f)
                 elif repr(cell)[1:18] == "Cross Setback Toe":
                     surveyToe = round(row[1])
-                    print(surveyToe, 'Cross Setback Toe found')
-                    print(surveyToe, 'Cross Setback Toe found', file = f)
+                    print(surveyToe, 'Cross Setback Toe depth found')
+                    print(surveyToe, 'Cross Setback Toe depth found', file = f)
                 
                 # print(repr(cell)[1:16])
         
@@ -143,7 +149,8 @@ if __name__ == "__main__":
         surveyKB = int((sheetSurvey.cell(8,9).value[3:5]))
         surveyHeelGL = surveyHeel - surveyKB
         surveyToeGL = surveyToe - surveyKB
-        
+        print('\nSummary')
+        print('\nSummary', file = f)
         print('\nDeepest perf        Shallowest perf')    
         print('\nDeepest perf        Shallowest perf',file=f)          
         print(' ', deepPerf,'             ', shallowPerf) 
@@ -160,17 +167,23 @@ if __name__ == "__main__":
         print(file = f)
         # Future -  need error handling made for this next part 
         if int(deepPerf) < int(sheetSetBack['AF22'].value):
-            print('Toe perf is within toe set-back line, perfs are good.')
-            print('Toe perf is within toe set-back line, perfs are good.',file=f) 
+            print('Toe perf is within toe set-back line, Toe perfs are good.')
+            print('Toe perf is within toe set-back line, Toe perfs are good.',file=f) 
         if int(deepPerf) >= int(sheetSetBack['AF22'].value):
             print('ERROR, Toe perf is deeper than toe set-back.')
             print('ERROR, Toe perf is deeper than toe set-back.',file=f)
-        if int(shallowPerf) > int(sheetSetBack['AF27'].value):
-            print('Heel perf is within heel set-back line, perfs are good.')
-            print('Heel perf is within heel set-back line, perfs are good.',file=f)
-        if int(shallowPerf) <= int(sheetSetBack['AF27'].value):
+        if int(shallowPerf) > int(sheetSetBack['AF26'].value):
+            print('Heel perf is within heel set-back line, Heel perfs are good.')
+            print('Heel perf is within heel set-back line, Heel perfs are good.',file=f)
+        if int(shallowPerf) <= int(sheetSetBack['AF26'].value):
             print('ERROR, Heel perf is shallower than heel set-back.')
             print('ERROR, Heel perf is shallower than heel set-back.',file=f)
+        if int(surveyHeelGL) != int(sheetSetBack['AF26'].value):
+            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack['AF26'].value),'ft difference.')
+            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack['AF26'].value),'ft difference.',file=f)
+        if int(surveyToeGL) != int(sheetSetBack['AF22'].value):
+            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack['AF22'].value),'ft difference.')
+            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack['AF22'].value),'ft difference.',file=f)
         print('\n')
         
         
