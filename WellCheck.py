@@ -4,7 +4,11 @@ import sys
 if __name__ == "__main__":
     
     with open(sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt', 'w') as f:
-          
+
+        #change these to match the Perf sheet cells    
+        cellToe = 'AF22'      
+        cellHeel = 'AF26'
+
         workbookPerf = load_workbook(filename=sys.argv[1], read_only=True, data_only=True)
         # grab number of stages from the sheet tab 
         numstages = int(workbookPerf.sheetnames[1][0:2:])
@@ -157,8 +161,8 @@ if __name__ == "__main__":
         print(' ', deepPerf,'             ', shallowPerf,file=f)   
         print('\nToe Set-back        Heel set-back') 
         print('\nToe Set-back        Heel set-back',file=f) 
-        print(' ',round(sheetSetBack['AF22'].value), '             ', round(sheetSetBack['AF26'].value))  
-        print(' ',round(sheetSetBack['AF22'].value), '             ', round(sheetSetBack['AF26'].value),file=f) 
+        print(' ',round(sheetSetBack[cellToe].value), '             ', round(sheetSetBack[cellHeel].value))  
+        print(' ',round(sheetSetBack[cellToe].value), '             ', round(sheetSetBack[cellHeel].value),file=f) 
         print('\nSurvey Toe SB (GL)   Survey Heel SB (GL)')    
         print('\nSurvey Toe SB (GL)   Survey Heel SB (GL)',file=f)          
         print(' ', surveyToeGL,'             ', surveyHeelGL) 
@@ -166,24 +170,25 @@ if __name__ == "__main__":
         print()
         print(file = f)
         # Future -  need error handling made for this next part 
-        if int(deepPerf) < int(sheetSetBack['AF22'].value):
+        # AF22 and AF26 cell values might change 
+        if int(deepPerf) < int(sheetSetBack[cellToe].value):
             print('Toe perf is within toe set-back line, Toe perfs are good.')
             print('Toe perf is within toe set-back line, Toe perfs are good.',file=f) 
-        if int(deepPerf) >= int(sheetSetBack['AF22'].value):
+        if int(deepPerf) >= int(sheetSetBack[cellToe].value):
             print('ERROR, Toe perf is deeper than toe set-back.')
             print('ERROR, Toe perf is deeper than toe set-back.',file=f)
-        if int(shallowPerf) > int(sheetSetBack['AF26'].value):
+        if int(shallowPerf) > int(sheetSetBack[cellHeel].value):
             print('Heel perf is within heel set-back line, Heel perfs are good.')
             print('Heel perf is within heel set-back line, Heel perfs are good.',file=f)
-        if int(shallowPerf) <= int(sheetSetBack['AF26'].value):
+        if int(shallowPerf) <= int(sheetSetBack[cellHeel].value):
             print('ERROR, Heel perf is shallower than heel set-back.')
             print('ERROR, Heel perf is shallower than heel set-back.',file=f)
-        if int(surveyHeelGL) != int(sheetSetBack['AF26'].value):
-            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack['AF26'].value),'ft difference.')
-            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack['AF26'].value),'ft difference.',file=f)
-        if int(surveyToeGL) != int(sheetSetBack['AF22'].value):
-            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack['AF22'].value),'ft difference.')
-            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack['AF22'].value),'ft difference.',file=f)
+        if int(surveyHeelGL) != int(sheetSetBack[cellHeel].value):
+            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack[cellHeel].value),'ft difference.')
+            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack[cellHeel].value),'ft difference.',file=f)
+        if int(surveyToeGL) != int(sheetSetBack[cellToe].value):
+            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.')
+            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.',file=f)
         print('\n')
         
         
