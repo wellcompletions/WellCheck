@@ -2,7 +2,7 @@ from openpyxl import load_workbook
 import sys 
 
 if __name__ == "__main__":
-    
+
     with open(sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt', 'w') as f:
 
         #change these to match the Perf sheet cells    
@@ -183,12 +183,12 @@ if __name__ == "__main__":
         if int(shallowPerf) <= int(sheetSetBack[cellHeel].value):
             print('ERROR, Heel perf is shallower than heel set-back.')
             print('ERROR, Heel perf is shallower than heel set-back.',file=f)
-        if int(surveyHeelGL) != int(sheetSetBack[cellHeel].value):
-            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack[cellHeel].value),'ft difference.')
-            print('Warning!, Survey heel setback does not equal perf sheet setback.', surveyHeelGL-int(sheetSetBack[cellHeel].value),'ft difference.',file=f)
-        if int(surveyToeGL) != int(sheetSetBack[cellToe].value):
-            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.')
-            print('Warning!, Survey toe setback does not equal perf sheet toe setback.', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.',file=f)
+        if int(surveyHeelGL) != int(round(sheetSetBack[cellHeel].value)):
+            print('Warning!, Survey heel setback ', surveyHeelGL, ', does not equal perf sheet setback. ', int(round(sheetSetBack[cellHeel].value)),' ', surveyHeelGL-int(round(sheetSetBack[cellHeel].value)),'ft difference.')
+            print('Warning!, Survey heel setback ', surveyHeelGL, ', does not equal perf sheet setback. ', int(round(sheetSetBack[cellHeel].value)),' ', surveyHeelGL-int(round(sheetSetBack[cellHeel].value)),'ft difference.', file=f)
+        if int(surveyToeGL) != int(round(sheetSetBack[cellToe].value)):
+            print('Warning!, Survey toe setback ',surveyToeGL,', does not equal perf sheet toe setback. ', int(round(sheetSetBack[cellToe].value)),' ', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.')
+            print('Warning!, Survey toe setback ',surveyToeGL,', does not equal perf sheet toe setback. ', int(round(sheetSetBack[cellToe].value)),' ', surveyToeGL-int(sheetSetBack[cellToe].value),'ft difference.', file = f)
         print('\n')
         
         
