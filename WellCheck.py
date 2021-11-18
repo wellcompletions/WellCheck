@@ -124,7 +124,8 @@ if __name__ == "__main__":
         surveyKB = 0
         surveyHeel = 0 
         surveyToe = 0
-        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB depth from header found')
+        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB depth from definitive survey header found')
+        print(sheetSurvey.cell(8,9).value[3:5], 'ft KB depth from definitive survey header found', file = f)
         for i, row in enumerate(sheetSurvey.iter_rows(min_row=24,
                                     max_row=300,
                                     min_col=0,
@@ -133,8 +134,8 @@ if __name__ == "__main__":
             for cell in row:
                 if repr(cell)[1:3] == "KB":
                     surveyKB = int(round(row[1]))
-                    print(round(row[1]), 'ft KB depth from data found')
-                    print(round(row[1]), 'ft KB depth from data found', file = f)
+                    print(round(row[1]), 'ft KB depth from definitive survey data found')
+                    print(round(row[1]), 'ft KB depth from definitive survey data found', file = f)
                 elif repr(cell)[1:19] == "Cross Setback Heel":
                     surveyHeel = round(row[1])   
                     print(surveyHeel, 'Cross Setback Heel depth found') 
@@ -148,7 +149,7 @@ if __name__ == "__main__":
         
             # print(i, row)                        
                 
-    # print deep / shallow and summary of good/bad
+    # print deep/shallow and summary of good/bad
         sheetSetBack = workbookPerf[workbookPerf.sheetnames[0]]
         surveyKB = int((sheetSurvey.cell(8,9).value[3:5]))
         surveyHeelGL = surveyHeel - surveyKB
