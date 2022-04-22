@@ -1,6 +1,20 @@
 from openpyxl import load_workbook
 import sys 
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
+# print(color.BOLD + 'Hello World !' + color.END)
+
 if __name__ == "__main__":
 
     with open(sys.argv[1].rstrip(".xlsx")+'_ERRORS.txt', 'w') as f:
@@ -14,7 +28,7 @@ if __name__ == "__main__":
         numstages = int(workbookPerf.sheetnames[1][0:2:])
         
         # print the header for both the terminal and the file 
-        print('\n\nLoading Perforations ...\n')
+        print(color.BOLD + '\n\nLoading Perforations ...\n'+ color.END)
         print('Perforations', file=f)
         print('\n',sys.argv[1][2::],'\n',workbookPerf.sheetnames[1], file=f)
         print(sys.argv[1][2::],'\n')
@@ -25,7 +39,7 @@ if __name__ == "__main__":
         for i, row in enumerate(sheet.iter_rows(min_row=8,
                                     max_row=(numstages*2)+7,
                                     min_col=3,
-                                    max_col=15,
+                                    max_col=17,
                                     values_only=True)):
             # pick every other row (evens)
             if i % 2 == 0:
@@ -44,27 +58,29 @@ if __name__ == "__main__":
         print('\nLoading Collars ...')
         print()
         workbookCollars = load_workbook(filename=sys.argv[2], read_only=True, data_only=True)
-        
-        print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n')
-        print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[1],'\n', file=f)
+     
+        print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[0],'\n')
+        print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[0],'\n', file=f)
         # select the collars sheet
-        sheetCollar = workbookCollars[workbookCollars.sheetnames[1]]
+        # from the casing tally 
+        sheetCollar = workbookCollars[workbookCollars.sheetnames[0]]
         collarDepth = []
         collarCount = 0
-        for k, row in enumerate(sheetCollar.iter_rows(min_row=12,
+        for k, row in enumerate(sheetCollar.iter_rows(min_row=31,
                                     max_row=500,
-                                    min_col=21,
-                                    max_col=21,
+                                    min_col=7, #set to row
+                                    max_col=7,
                                     values_only=True), start=1):
             for cell in row:
                 if isinstance(cell, float) or isinstance(cell, int):
-                    collarCount +=1
-                    collarDepth.append(round(cell))   
-                    print(repr(round(cell)).rjust(5), end=' ')
-                    print(repr(round(cell)).rjust(5), end=' ', file=f)
-                    if k % 13 == 0:
-                        print()
-                        print(file=f)
+                    if cell > 0:
+                        collarCount +=1
+                        collarDepth.append(round(cell))   
+                        print(repr(round(cell)).rjust(5), end=' ')
+                        print(repr(round(cell)).rjust(5), end=' ', file=f)
+                        if k % 15 == 0:
+                            print()
+                            print(file=f)
         print('\n\n', collarCount, 'Collars found.')   
         print('\n\n', collarCount, 'Collars found.', file = f)   
         print('\nList of conflicts: \n')
@@ -118,7 +134,7 @@ if __name__ == "__main__":
         print('Survey', file = f)
         print(file = f)
         print(sys.argv[3][2::].strip())
-        print('\n',sys.argv[2][2::].strip(), file = f)
+        print(sys.argv[3][2::].strip(), file = f)
         workbookSurvey = load_workbook(filename=sys.argv[3], read_only=True, data_only=True)
         sheetSurvey = workbookSurvey[workbookSurvey.sheetnames[0]]
         surveyKB = 0
@@ -144,7 +160,7 @@ if __name__ == "__main__":
                     surveyToe = round(row[1])
                     print(surveyToe, 'Cross Setback Toe depth found')
                     print(surveyToe, 'Cross Setback Toe depth found', file = f)
-                
+                #need to capture not finding cross setback toe and cross setbak errors 
                 # print(repr(cell)[1:16])
         
             # print(i, row)                        
