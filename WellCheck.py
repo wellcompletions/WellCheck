@@ -22,6 +22,7 @@ if __name__ == "__main__":
         #change these to match the Perf sheet cells    
         cellToe = 'AF22'      
         cellHeel = 'AF26'
+        TALLY_TAB = 0
 
         workbookPerf = load_workbook(filename=sys.argv[1], read_only=True, data_only=True)
         # grab number of stages from the sheet tab 
@@ -59,11 +60,11 @@ if __name__ == "__main__":
         print()
         workbookCollars = load_workbook(filename=sys.argv[2], read_only=True, data_only=True)
      
-        print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[0],'\n')
-        print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[0],'\n', file=f)
+        print(sys.argv[2][2::].strip(), workbookCollars.sheetnames[TALLY_TAB],'\n')
+        print('\n', sys.argv[2][2::].strip(), workbookCollars.sheetnames[TALLY_TAB],'\n', file=f)
         # select the collars sheet
         # from the casing tally 
-        sheetCollar = workbookCollars[workbookCollars.sheetnames[0]]
+        sheetCollar = workbookCollars[workbookCollars.sheetnames[TALLY_TAB]]
         collarDepth = []
         collarCount = 0
         for k, row in enumerate(sheetCollar.iter_rows(min_row=31,
